@@ -6,6 +6,6 @@ export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) {}
 
   getProducts() {
-    return 'porducts';
+    return this.productsRepository.getProducts();
   }
 }

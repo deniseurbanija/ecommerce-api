@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-type User = {
+type Users = {
   id: number;
   email: string;
   name: string;
@@ -13,7 +13,7 @@ type User = {
 
 @Injectable()
 export class UsersRepository {
-  private users: User[] = [
+  private users: Users[] = [
     {
       id: 1,
       email: 'john.doe@example.com',
