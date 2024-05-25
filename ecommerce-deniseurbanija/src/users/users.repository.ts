@@ -1,19 +1,9 @@
 import { Injectable } from '@nestjs/common';
-
-type Users = {
-  id: number;
-  email: string;
-  name: string;
-  password: string;
-  address: string;
-  phone: string;
-  country?: string | undefined;
-  city?: string | undefined;
-};
+import { IUser } from 'src/interfaces/IUser';
 
 @Injectable()
 export class UsersRepository {
-  private users: Users[] = [
+  private users: IUser[] = [
     {
       id: 1,
       email: 'john.doe@example.com',
@@ -66,5 +56,19 @@ export class UsersRepository {
 
   async getUsers() {
     return this.users;
+  }
+
+  async createUser(user: Omit<IUser, 'id'>) {
+    const id = this.users.length + 1;
+    this.users = [...this.users, { id, ...user }];
+    return { id, ...user };
+  }
+
+  async updateUser() {
+    return 'this should update an user';
+  }
+
+  async deleteUser() {
+    return 'this should delete an user';
   }
 }
