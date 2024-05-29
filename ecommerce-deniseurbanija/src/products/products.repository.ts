@@ -1,17 +1,9 @@
 import { Injectable } from '@nestjs/common';
-
-type Products = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  stock: boolean;
-  imgUrl: string;
-};
+import { IProduct } from 'src/interfaces/IProduct';
 
 @Injectable()
 export class ProductsRepository {
-  private products: Products[] = [
+  private products: IProduct[] = [
     {
       id: 1,
       name: 'Laptop',
@@ -60,5 +52,15 @@ export class ProductsRepository {
 
   async getProducts() {
     return this.products;
+  }
+
+  async createProduct(product: Omit<IProduct, 'id'>) {
+    const id = this.products.length + 1;
+    this.products = [...this.products, { id, ...product }];
+    return { id, ...product };
+  }
+
+  async updateProduct(id) {
+    this.products.find((product) => product.id === id);
   }
 }

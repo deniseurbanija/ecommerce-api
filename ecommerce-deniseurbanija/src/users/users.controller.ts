@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { IUser } from 'src/interfaces/IUser';
 
@@ -14,11 +22,16 @@ export class UsersController {
     return this.usersService.createUser(user);
   }
   @Put()
-  updateUser() {
-    return this.usersService.updateUser();
+  updateUser(@Param('id') id: string, @Body() userChange: any) {
+    return this.usersService.updateUser(id, userChange);
   }
-  @Delete()
-  deleteUser() {
-    return this.usersService.deleteUser();
+  @Delete(':id')
+  deleteUser(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
+  }
+
+  @Get(':id')
+  getUserById(@Param('id') id: string) {
+    return this.usersService.getUserById(id);
   }
 }

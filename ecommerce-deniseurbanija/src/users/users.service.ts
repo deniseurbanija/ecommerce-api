@@ -8,13 +8,16 @@ export class UsersService {
   getUsers() {
     return this.usersRespository.getUsers();
   }
-  createUser(user: Omit<IUser, 'id'>): Promise<IUser> {
+  createUser(user: Omit<IUser, 'id'>) {
     return this.usersRespository.createUser(user);
   }
-  updateUser() {
-    return this.usersRespository.updateUser();
+  updateUser(id, userChange) {
+    return this.usersRespository.updateUser(id, userChange);
   }
-  deleteUser() {
-    return this.usersRespository.deleteUser();
+  deleteUser(id) {
+    return this.usersRespository.deleteUser(id);
+  }
+  getUserById(id: string) {
+    return this.usersRespository.getUserById(id);
   }
 }

@@ -5,7 +5,7 @@ import { IUser } from 'src/interfaces/IUser';
 export class UsersRepository {
   private users: IUser[] = [
     {
-      id: 1,
+      id: '1',
       email: 'john.doe@example.com',
       name: 'John Doe',
       password: 'password123',
@@ -15,7 +15,7 @@ export class UsersRepository {
       city: 'New York',
     },
     {
-      id: 2,
+      id: '2',
       email: 'jane.smith@example.com',
       name: 'Jane Smith',
       password: 'securePass!456',
@@ -25,7 +25,7 @@ export class UsersRepository {
       city: 'Toronto',
     },
     {
-      id: 3,
+      id: '3',
       email: 'alice.jones@example.com',
       name: 'Alice Jones',
       password: 'aliceInWonderland89',
@@ -33,7 +33,7 @@ export class UsersRepository {
       phone: '555-9012',
     },
     {
-      id: 4,
+      id: '4',
       email: 'bob.brown@example.com',
       name: 'Bob Brown',
       password: 'browniePoints77',
@@ -42,33 +42,41 @@ export class UsersRepository {
       country: 'UK',
       city: 'London',
     },
-    {
-      id: 5,
-      email: 'charlie.davis@example.com',
-      name: 'Charlie Davis',
-      password: 'charlieHorse23',
-      address: '654 Maple St, Apt 1D',
-      phone: '555-7890',
-      country: 'Australia',
-      city: 'Sydney',
-    },
   ];
 
   async getUsers() {
-    return this.users;
+    const users = this.users.map(
+      ({ password, ...usersWithoutPassword }) => usersWithoutPassword,
+    );
+    return await users;
   }
 
   async createUser(user: Omit<IUser, 'id'>) {
-    const id = this.users.length + 1;
-    this.users = [...this.users, { id, ...user }];
-    return { id, ...user };
+    const id = (this.users.length + 1).toString();
+    await this.users.push({ id, ...user });
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
-  async updateUser() {
-    return 'this should update an user';
+  async updateUser(id, userChange) {
+    const userId = this.users.find((user) => user.id === id);
+    if (!userId) return 'user not found';
+    const updatedUser = { ...userId, ...userChange };
+    const { password, ...userWithoutPassword } = updatedUser;
+    return userWithoutPassword;
   }
 
-  async deleteUser() {
-    return 'this should delete an user';
+  async deleteUser(id) {
+    const userId = this.users.find((user) => user.id === id);
+    this.users = this.users.filter((user) => user.id !== id);
+    const { password, ...userWithoutPassword } = userId;
+    return 'user deleted: ' + userWithoutPassword;
+  }
+
+  async getUserById(id) {
+    const user = this.users.find((user) => user.id === id);
+    // destructuring for returning the user without its password
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }
