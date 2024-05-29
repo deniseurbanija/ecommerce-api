@@ -3,6 +3,12 @@ import { IProduct } from 'src/interfaces/IProduct';
 
 @Injectable()
 export class ProductsRepository {
+  deleteProduct(id: number) {
+    throw new Error('Method not implemented.');
+  }
+  getProductById(id: number) {
+    throw new Error('Method not implemented.');
+  }
   private products: IProduct[] = [
     {
       id: 1,

@@ -5,8 +5,8 @@ import { IUser } from 'src/interfaces/IUser';
 @Injectable({})
 export class UsersService {
   constructor(private readonly usersRespository: UsersRepository) {}
-  getUsers() {
-    return this.usersRespository.getUsers();
+  getUsers(page, limit) {
+    return this.usersRespository.getUsers(page, limit);
   }
   createUser(user: Omit<IUser, 'id'>) {
     return this.usersRespository.createUser(user);
@@ -17,7 +17,7 @@ export class UsersService {
   deleteUser(id) {
     return this.usersRespository.deleteUser(id);
   }
-  getUserById(id: string) {
+  getUserById(id) {
     return this.usersRespository.getUserById(id);
   }
 }

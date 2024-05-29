@@ -6,13 +6,19 @@ import { IProduct } from 'src/interfaces/IProduct';
 export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) {}
 
-  getProducts() {
-    return this.productsRepository.getProducts();
+  getProducts(page, limit) {
+    return this.productsRepository.getProducts(page, limit);
+  }
+  getProductById(id) {
+    return this.productsRepository.getProductById(id);
   }
   createProduct(product: Omit<IProduct, 'id'>): Promise<IProduct> {
     return this.productsRepository.createProduct(product);
   }
-  updateProduct(id: number) {
+  updateProduct(id) {
     return this.productsRepository.updateProduct(id);
+  }
+  deleteProduct(id) {
+    return this.productsRepository.deleteProduct(id);
   }
 }

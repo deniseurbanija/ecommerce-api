@@ -44,8 +44,13 @@ export class UsersRepository {
     },
   ];
 
-  async getUsers() {
-    const users = this.users.map(
+  async getUsers(page: number, limit: number) {
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const userPage = this.users.slice(start, end);
+
+    const users = userPage.map(
       ({ password, ...usersWithoutPassword }) => usersWithoutPassword,
     );
     return await users;
@@ -60,9 +65,15 @@ export class UsersRepository {
 
   async updateUser(id, userChange) {
     const userId = this.users.find((user) => user.id === id);
+
     if (!userId) return 'user not found';
+
     const updatedUser = { ...userId, ...userChange };
+
+    this.users.map((user) => (user.id === id ? updatedUser : user));
+
     const { password, ...userWithoutPassword } = updatedUser;
+
     return userWithoutPassword;
   }
 
@@ -70,7 +81,7 @@ export class UsersRepository {
     const userId = this.users.find((user) => user.id === id);
     this.users = this.users.filter((user) => user.id !== id);
     const { password, ...userWithoutPassword } = userId;
-    return 'user deleted: ' + userWithoutPassword;
+    return 'user deleted' + userWithoutPassword;
   }
 
   async getUserById(id) {

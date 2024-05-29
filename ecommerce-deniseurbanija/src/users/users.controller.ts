@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { IUser } from 'src/interfaces/IUser';
@@ -14,14 +15,15 @@ import { IUser } from 'src/interfaces/IUser';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
-  getUsers() {
-    return this.usersService.getUsers();
+  getUsers(@Query('page') page: number = 1, @Query('limit') limit: number = 5) {
+    if (page && limit) return this.usersService.getUsers(page, limit);
+    return this.usersService.getUsers(page, limit);
   }
   @Post()
   createUser(@Body() user: IUser) {
     return this.usersService.createUser(user);
   }
-  @Put()
+  @Put(':id')
   updateUser(@Param('id') id: string, @Body() userChange: any) {
     return this.usersService.updateUser(id, userChange);
   }
