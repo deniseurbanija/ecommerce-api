@@ -56,6 +56,13 @@ export class UsersRepository {
     return await users;
   }
 
+  async getUserById(id) {
+    const user = this.users.find((user) => user.id === id);
+    // destructuring for returning the user without its password
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  }
+
   async createUser(user: Omit<IUser, 'id'>) {
     const id = (this.users.length + 1).toString();
     await this.users.push({ id, ...user });
@@ -82,12 +89,5 @@ export class UsersRepository {
     this.users = this.users.filter((user) => user.id !== id);
     const { password, ...userWithoutPassword } = userId;
     return 'user deleted' + userWithoutPassword;
-  }
-
-  async getUserById(id) {
-    const user = this.users.find((user) => user.id === id);
-    // destructuring for returning the user without its password
-    const { password, ...userWithoutPassword } = user;
-    return userWithoutPassword;
   }
 }

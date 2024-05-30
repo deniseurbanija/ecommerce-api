@@ -3,12 +3,6 @@ import { IProduct } from 'src/interfaces/IProduct';
 
 @Injectable()
 export class ProductsRepository {
-  deleteProduct(id: number) {
-    throw new Error('Method not implemented.');
-  }
-  getProductById(id: number) {
-    throw new Error('Method not implemented.');
-  }
   private products: IProduct[] = [
     {
       id: 1,
@@ -56,8 +50,20 @@ export class ProductsRepository {
     },
   ];
 
-  async getProducts() {
-    return this.products;
+  async getProducts(page, limit) {
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const productPage = this.products.slice(start, end);
+    return productPage;
+  }
+
+  getProductById(id: number) {
+    const product = this.products.find((product) => product.id === id);
+
+    if (!product) return 'product not found';
+
+    return product;
   }
 
   async createProduct(product: Omit<IProduct, 'id'>) {
@@ -66,7 +72,15 @@ export class ProductsRepository {
     return { id, ...product };
   }
 
-  async updateProduct(id) {
-    this.products.find((product) => product.id === id);
+  async updateProduct(id, productChange) {
+    const productId = this.products.find((product) => product.id === id);
+    const updatedProduct = { ...productId, ...productChange };
+    return updatedProduct;
+  }
+
+  async deleteProduct(id: number) {
+    const deletedProduct = this.products.find((product) => product.id === id);
+    this.products = this.products.filter((product) => product.id !== id);
+    return deletedProduct;
   }
 }

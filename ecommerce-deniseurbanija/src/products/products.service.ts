@@ -15,8 +15,8 @@ export class ProductsService {
   createProduct(product: Omit<IProduct, 'id'>): Promise<IProduct> {
     return this.productsRepository.createProduct(product);
   }
-  updateProduct(id) {
-    return this.productsRepository.updateProduct(id);
+  updateProduct(id, productChange) {
+    return this.productsRepository.updateProduct(id, productChange);
   }
   deleteProduct(id) {
     return this.productsRepository.deleteProduct(id);
