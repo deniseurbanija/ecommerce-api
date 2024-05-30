@@ -7,9 +7,11 @@ import {
   Delete,
   Query,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { IProduct } from 'src/interfaces/IProduct';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller(`products`)
 export class ProductsController {
@@ -29,16 +31,19 @@ export class ProductsController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   createProduct(@Body() product: IProduct) {
     return this.productsService.createProduct(product);
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   updateProduct(@Param() id: number, @Body() productChange: string) {
     return this.productsService.updateProduct(id, productChange);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   deleteProduct(@Param() id: number) {
     return this.productsService.deleteProduct(id);
   }
