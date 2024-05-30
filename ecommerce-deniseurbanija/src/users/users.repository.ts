@@ -90,4 +90,8 @@ export class UsersRepository {
     const { password, ...userWithoutPassword } = userId;
     return 'user deleted' + userWithoutPassword;
   }
+
+  async getUserByEmail(email) {
+    return this.users.find((user) => user.email === email);
+  }
 }
