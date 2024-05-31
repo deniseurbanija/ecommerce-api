@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { IProduct } from 'src/interfaces/IProduct';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 
 @Controller(`products`)
 export class ProductsController {

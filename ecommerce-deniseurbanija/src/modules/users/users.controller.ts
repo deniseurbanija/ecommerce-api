@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { IUser } from 'src/interfaces/IUser';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
 
 @Controller(`users`)
 export class UsersController {
