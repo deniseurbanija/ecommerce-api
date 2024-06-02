@@ -6,19 +6,22 @@ import { IProduct } from 'src/interfaces/IProduct';
 export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) {}
 
-  getProducts(page, limit) {
-    return this.productsRepository.getProducts(page, limit);
+  async seedProducts() {
+    return await this.productsRepository.seedProducts();
   }
-  getProductById(id) {
-    return this.productsRepository.getProductById(id);
-  }
-  createProduct(product: Omit<IProduct, 'id'>): Promise<IProduct> {
-    return this.productsRepository.createProduct(product);
-  }
-  updateProduct(id, productChange) {
-    return this.productsRepository.updateProduct(id, productChange);
-  }
-  deleteProduct(id) {
-    return this.productsRepository.deleteProduct(id);
-  }
+  // getProducts(page, limit) {
+  //   return this.productsRepository.getProducts(page, limit);
+  // }
+  // getProductById(id) {
+  //   return this.productsRepository.getProductById(id);
+  // }
+  // createProduct(product: Omit<IProduct, 'id'>): Promise<IProduct> {
+  //   return this.productsRepository.createProduct(product);
+  // }
+  // updateProduct(id, productChange) {
+  //   return this.productsRepository.updateProduct(id, productChange);
+  // }
+  // deleteProduct(id) {
+  //   return this.productsRepository.deleteProduct(id);
+  // }
 }

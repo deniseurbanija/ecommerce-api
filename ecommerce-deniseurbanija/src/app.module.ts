@@ -5,6 +5,8 @@ import { ProductsModule } from './modules/products/products.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './db/config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { CategoriesController } from './modules/categories/categories.controller';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     AuthModule,
     UsersModule,
     ProductsModule,
+    CategoriesModule,
   ],
   controllers: [],
   providers: [],
