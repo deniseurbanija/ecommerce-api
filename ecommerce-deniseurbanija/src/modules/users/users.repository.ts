@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { take } from 'rxjs';
 import { Users } from 'src/db/entities/Users.entity';
 import { IUser } from 'src/interfaces/IUser';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/CreateUser.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -24,51 +24,46 @@ export class UsersRepository {
     );
   }
 
+  async getUserById(id: string) {
+    const foundUser = await this.usersRepository.findOne({ where: { id } });
+
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
+
+    return foundUser;
+  }
+
   async getUserByEmail(email: string) {
-    return this.usersRepository.findOne({ where: { email: email } });
+    return await this.usersRepository.findOne({ where: { email: email } });
+  }
+
+  async createUser(userData: CreateUserDto) {
+    const newUser = await this.usersRepository.create(userData);
+    const savedUser = await this.usersRepository.save(newUser);
+    return savedUser;
+  }
+
+  async updateUser(id: string, userData: any) {
+    const foundUser = await this.usersRepository.findOne({
+      where: { id },
+    });
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
+
+    const updatedUser = this.usersRepository.merge(foundUser, userData);
+    await this.usersRepository.save(updatedUser);
+    return { message: 'User Update Successfully', updatedUser };
+  }
+
+  async deleteUser(id: string) {
+    const foundUser = await this.usersRepository.findOne({
+      where: { id },
+    });
+    if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
+
+    await this.usersRepository.remove(foundUser);
+    return { id: id, message: 'User Delete Successfully!' };
   }
 }
 
-// private users: IUser[] = [
-//   {
-//     id: '1',
-//     email: 'john.doe@example.com',
-//     name: 'John Doe',
-//     password: 'password123',
-//     address: '123 Main St, Apt 4B',
-//     phone: '555-1234',
-//     country: 'USA',
-//     city: 'New York',
-//   },
-//   {
-//     id: '2',
-//     email: 'jane.smith@example.com',
-//     name: 'Jane Smith',
-//     password: 'securePass!456',
-//     address: '456 Elm St, Suite 2A',
-//     phone: '555-5678',
-//     country: 'Canada',
-//     city: 'Toronto',
-//   },
-//   {
-//     id: '3',
-//     email: 'alice.jones@example.com',
-//     name: 'Alice Jones',
-//     password: 'aliceInWonderland89',
-//     address: '789 Oak St',
-//     phone: '555-9012',
-//   },
-//   {
-//     id: '4',
-//     email: 'bob.brown@example.com',
-//     name: 'Bob Brown',
-//     password: 'browniePoints77',
-//     address: '321 Pine St, Apt 3C',
-//     phone: '555-3456',
-//     country: 'UK',
-//     city: 'London',
-//   },
-// ];
 // async getUsers(page: number, limit: number) {
 //   const start = (page - 1) * limit;
 //   const end = start + limit;

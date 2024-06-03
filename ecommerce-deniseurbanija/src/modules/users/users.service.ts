@@ -1,23 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { IUser } from 'src/interfaces/IUser';
 
 @Injectable({})
 export class UsersService {
   constructor(private readonly usersRespository: UsersRepository) {}
-  getUsers(page, limit) {
-    return this.usersRespository.getUsers(page, limit);
+  async getUsers(page, limit) {
+    return await this.usersRespository.getUsers(page, limit);
   }
-  // createUser(user: Omit<IUser, 'id'>) {
-  //   return this.usersRespository.createUser(user);
-  // }
-  // updateUser(id, userChange) {
-  //   return this.usersRespository.updateUser(id, userChange);
-  // }
-  // deleteUser(id) {
-  //   return this.usersRespository.deleteUser(id);
-  // }
-  // getUserById(id) {
-  //   return this.usersRespository.getUserById(id);
-  // }
+  async getUserById(id) {
+    return await this.usersRespository.getUserById(id);
+  }
+  async updateUser(id, userData) {
+    return await this.usersRespository.updateUser(id, userData);
+  }
+  async deleteUser(id) {
+    return await this.usersRespository.deleteUser(id);
+  }
 }

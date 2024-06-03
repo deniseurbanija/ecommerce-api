@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateUserDTO {
+export class CreateUserDto {
   /**
    *
    * -Must be a string with a minimum of 3 characters and a maximum of 80

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -7,6 +8,7 @@ import {
 import { UsersRepository } from '../users/users.repository';
 import { LoginUserDto } from './dto/LoginUser.dto';
 import { Users } from 'src/db/entities/Users.entity';
+import { CreateUserDto } from '../users/dto/CreateUser.dto';
 
 @Injectable({})
 export class AuthService {
@@ -31,5 +33,17 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  async signUp(userData: CreateUserDto) {
+    const checkUser = await this.usersRepository.getUserByEmail(userData.email);
+    if (checkUser)
+      throw new BadRequestException(
+        'There is an existing user with this email',
+      );
+
+    const newUser = await this.usersRepository.createUser(userData);
+
+    return `User signed up succesfully: ${newUser.name}`;
   }
 }

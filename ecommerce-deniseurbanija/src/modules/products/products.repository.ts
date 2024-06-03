@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { IProduct } from 'src/interfaces/IProduct';
 import * as data from '../../utils/data.json';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from 'src/db/entities/Products.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { Categories } from 'src/db/entities/Categories.entity';
+import { CreateProductDto } from './dto/createProduct.dto';
 
 @Injectable()
 export class ProductsRepository {
@@ -44,38 +49,97 @@ export class ProductsRepository {
         'The values of products names are unique and already exist in the products table',
     };
   }
+  async getProducts(page: number, limit: number): Promise<Products[]> {
+    const [products] = await this.productsRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      where: { stock: MoreThan(0) },
+      relations: ['category'],
+    });
 
-  // async getProducts(page, limit) {
-  //   const start = (page - 1) * limit;
-  //   const end = start + limit;
+    if (products.length === 0)
+      throw new NotFoundException('products list is still empty');
+    return products;
+  }
 
-  //   const productPage = this.products.slice(start, end);
-  //   return productPage;
-  // }
+  async getProductById(id: string): Promise<Products> {
+    const product: Products | undefined = await this.productsRepository.findOne(
+      {
+        where: { id },
+      },
+    );
 
-  // getProductById(id: number) {
-  //   const product = this.products.find((product) => product.id === id);
+    if (!product) throw new NotFoundException('product not found or not exist');
+    return product;
+  }
 
-  //   if (!product) return 'product not found';
+  async createProduct(productData: CreateProductDto) {
+    const foundProduct = await this.productsRepository.findOne({
+      where: { name: productData.name },
+    });
 
-  //   return product;
-  // }
+    if (foundProduct) throw new BadRequestException('product already exist');
 
-  // async createProduct(product: Omit<IProduct, 'id'>) {
-  //   const id = this.products.length + 1;
-  //   this.products = [...this.products, { id, ...product }];
-  //   return { id, ...product };
-  // }
+    return await this.productsRepository.save(productData);
+  }
 
-  // async updateProduct(id, productChange) {
-  //   const productId = this.products.find((product) => product.id === id);
-  //   const updatedProduct = { ...productId, ...productChange };
-  //   return updatedProduct;
-  // }
+  async updateProduct(productData: any, id: string) {
+    const foundProduct = await this.productsRepository.findOne({
+      where: { id },
+    });
+    if (!foundProduct)
+      throw new NotFoundException('product not found or not exist');
 
-  // async deleteProduct(id: number) {
-  //   const deletedProduct = this.products.find((product) => product.id === id);
-  //   this.products = this.products.filter((product) => product.id !== id);
-  //   return deletedProduct;
-  // }
+    const updatedProduct = this.productsRepository.merge(
+      foundProduct,
+      productData,
+    );
+    await this.productsRepository.save(updatedProduct);
+
+    return { message: 'Product Update Successfully', updatedProduct };
+  }
+
+  async deleteProduct(id: string) {
+    const product = await this.productsRepository.findOne({
+      where: { id },
+    });
+
+    if (!product) throw new NotFoundException('product not found or not exist');
+    await this.productsRepository.remove(product);
+    return { id: id, message: 'Product Deleted Succesfully!' };
+  }
 }
+
+// async getProducts(page, limit) {
+//   const start = (page - 1) * limit;
+//   const end = start + limit;
+
+//   const productPage = this.products.slice(start, end);
+//   return productPage;
+// }
+
+// getProductById(id: number) {
+//   const product = this.products.find((product) => product.id === id);
+
+//   if (!product) return 'product not found';
+
+//   return product;
+// }
+
+// async createProduct(product: Omit<IProduct, 'id'>) {
+//   const id = this.products.length + 1;
+//   this.products = [...this.products, { id, ...product }];
+//   return { id, ...product };
+// }
+
+// async updateProduct(id, productChange) {
+//   const productId = this.products.find((product) => product.id === id);
+//   const updatedProduct = { ...productId, ...productChange };
+//   return updatedProduct;
+// }
+
+// async deleteProduct(id: number) {
+//   const deletedProduct = this.products.find((product) => product.id === id);
+//   this.products = this.products.filter((product) => product.id !== id);
+//   return deletedProduct;
+// }
