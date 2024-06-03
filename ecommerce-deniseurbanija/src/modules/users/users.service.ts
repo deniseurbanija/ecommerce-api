@@ -8,16 +8,16 @@ export class UsersService {
   getUsers(page, limit) {
     return this.usersRespository.getUsers(page, limit);
   }
-  createUser(user: Omit<IUser, 'id'>) {
-    return this.usersRespository.createUser(user);
-  }
-  updateUser(id, userChange) {
-    return this.usersRespository.updateUser(id, userChange);
-  }
-  deleteUser(id) {
-    return this.usersRespository.deleteUser(id);
-  }
-  getUserById(id) {
-    return this.usersRespository.getUserById(id);
-  }
+  // createUser(user: Omit<IUser, 'id'>) {
+  //   return this.usersRespository.createUser(user);
+  // }
+  // updateUser(id, userChange) {
+  //   return this.usersRespository.updateUser(id, userChange);
+  // }
+  // deleteUser(id) {
+  //   return this.usersRespository.deleteUser(id);
+  // }
+  // getUserById(id) {
+  //   return this.usersRespository.getUserById(id);
+  // }
 }
