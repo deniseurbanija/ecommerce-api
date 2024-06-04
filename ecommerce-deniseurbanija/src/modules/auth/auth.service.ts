@@ -9,10 +9,15 @@ import { UsersRepository } from '../users/users.repository';
 import { LoginUserDto } from './dto/LoginUser.dto';
 import { Users } from 'src/db/entities/Users.entity';
 import { CreateUserDto } from '../users/dto/CreateUser.dto';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable({})
 export class AuthService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async signIn(userData: LoginUserDto) {
     try {
@@ -21,9 +26,17 @@ export class AuthService {
       );
 
       if (!user) throw new NotFoundException('User not found');
+      const hashedPassword = bcrypt.hash(userData.password, 10);
 
-      if ((await user).password === userData.password)
-        return 'Log in sucessfully';
+      const userPayload = {
+        id: user.id,
+        email: user.email,
+      };
+      const token = this.jwtService.sign(userPayload);
+
+      const verify = bcrypt.compare(userData.password, hashedPassword);
+
+      if (verify) return { message: 'Succesful log in', token };
     } catch (e) {
       throw new HttpException(
         {
@@ -41,8 +54,15 @@ export class AuthService {
       throw new BadRequestException(
         'There is an existing user with this email',
       );
+    const hashedPassword = bcrypt.hash(userData.password, 10);
 
-    const newUser = await this.usersRepository.createUser(userData);
+    if (!hashedPassword)
+      throw new BadRequestException('Password could not be hashed');
+
+    const newUser = await this.usersRepository.createUser({
+      ...userData,
+      password: hashedPassword,
+    });
 
     return `User signed up succesfully: ${newUser.name}`;
   }
