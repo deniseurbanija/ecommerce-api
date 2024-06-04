@@ -49,6 +49,7 @@ export class ProductsRepository {
         'The values of products names are unique and already exist in the products table',
     };
   }
+
   async getProducts(page: number, limit: number): Promise<Products[]> {
     const [products] = await this.productsRepository.findAndCount({
       skip: (page - 1) * limit,

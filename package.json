@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "buffer-to-stream": "^1.0.0"
+  }
+}
