@@ -48,11 +48,11 @@ export class AuthService {
           HttpStatus.UNAUTHORIZED,
         );
       }
-
       // Create token
       const userPayload = {
         id: user.id,
         email: user.email,
+        isAdmin: user.isAdmin,
       };
       const token = this.jwtService.sign(userPayload);
 

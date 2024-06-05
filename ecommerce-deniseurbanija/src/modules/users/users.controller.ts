@@ -10,11 +10,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { Roles } from 'src/decorator/roles.decorator';
+import { Role } from 'src/enum/role.enum';
+import { RolesGuard } from '../../guards/roles.guard';
 
 @Controller(`users`)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
   @Get()
   @UseGuards(AuthGuard)
   async getUsers(
@@ -24,6 +28,14 @@ export class UsersController {
     if (page && limit) return this.usersService.getUsers(page, limit);
     return await this.usersService.getUsers(page, limit);
   }
+
+  @Get('admin')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  admin() {
+    return 'ruta protegida';
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard)
   async getUserById(@Param('id', ParseUUIDPipe) id: string) {

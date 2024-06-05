@@ -11,7 +11,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { AuthGuard } from 'src/modules/auth/guards/auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateProductDto } from './dto/createProduct.dto';
 
 @Controller(`products`)
