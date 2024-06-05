@@ -3,14 +3,13 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import { LoginUserDto } from './dto/LoginUser.dto';
-import { Users } from 'src/db/entities/Users.entity';
 import { CreateUserDto } from '../users/dto/CreateUser.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Users } from 'src/db/entities/Users.entity';
 
 @Injectable({})
 export class AuthService {
@@ -21,49 +20,85 @@ export class AuthService {
 
   async signIn(userData: LoginUserDto) {
     try {
-      const user: Users = await this.usersRepository.getUserByEmail(
-        userData.email,
-      );
+      // Check for email and password
+      if (!userData.email || !userData.password) {
+        throw new BadRequestException(`Email and password are required`);
+      }
 
-      if (!user) throw new NotFoundException('User not found');
-      const hashedPassword = bcrypt.hash(userData.password, 10);
+      // Check if email is valid
+      const user = await this.usersRepository.getUserByEmail(userData.email);
+      if (!user) {
+        throw new HttpException(
+          {
+            message: 'User not found',
+            status: HttpStatus.UNAUTHORIZED,
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
 
+      // Compare with DB password
+      const verify = await bcrypt.compare(userData.password, user.password);
+      if (!verify) {
+        throw new HttpException(
+          {
+            message: 'Incorrect credentials',
+            status: HttpStatus.UNAUTHORIZED,
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      // Create token
       const userPayload = {
         id: user.id,
         email: user.email,
       };
       const token = this.jwtService.sign(userPayload);
 
-      const verify = bcrypt.compare(userData.password, hashedPassword);
-
-      if (verify) return { message: 'Succesful log in', token };
+      return { message: 'Successful log in', token };
     } catch (e) {
+      console.error('Error during sign-in:', e.message); // Registro de depuración
       throw new HttpException(
         {
-          message: 'Incorrect credentials',
-          status: HttpStatus.BAD_REQUEST,
+          message: 'An error occurred during sign-in',
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
         },
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
   async signUp(userData: CreateUserDto) {
-    const checkUser = await this.usersRepository.getUserByEmail(userData.email);
-    if (checkUser)
+    //check for email and password
+    if (!userData.email || !userData.password)
+      throw new BadRequestException(`email and password are required`);
+
+    // check if email is used
+    const checkEmail = await this.usersRepository.getUserByEmail(
+      userData.email,
+    );
+    if (checkEmail)
       throw new BadRequestException(
         'There is an existing user with this email',
       );
-    const hashedPassword = bcrypt.hash(userData.password, 10);
+
+    if (userData.password !== userData.passwordConfirm)
+      throw new BadRequestException('Passwords do not match');
+
+    //hash the password with bcrypt
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
 
     if (!hashedPassword)
       throw new BadRequestException('Password could not be hashed');
 
-    const newUser = await this.usersRepository.createUser({
-      ...userData,
-      password: hashedPassword,
-    });
+    //create new user with the hashed password
+    const newUser: Omit<Users, 'password'> =
+      await this.usersRepository.createUser({
+        ...userData,
+        password: hashedPassword,
+      });
 
-    return `User signed up succesfully: ${newUser.name}`;
+    return newUser;
   }
 }

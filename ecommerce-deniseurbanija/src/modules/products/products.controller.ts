@@ -36,7 +36,6 @@ export class ProductsController {
   }
 
   @Post()
-  @UseGuards(AuthGuard)
   createProduct(@Body() product: CreateProductDto) {
     return this.productsService.createProduct(product);
   }
@@ -51,7 +50,6 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
   deleteProduct(@Param('id', ParseUUIDPipe) id: number) {
     return this.productsService.deleteProduct(id);
   }

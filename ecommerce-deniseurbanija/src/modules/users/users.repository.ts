@@ -29,17 +29,23 @@ export class UsersRepository {
 
     if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
 
-    return foundUser;
+    const { password, ...userWithoutPassword } = foundUser;
+
+    return userWithoutPassword;
   }
 
   async getUserByEmail(email: string) {
-    return await this.usersRepository.findOne({ where: { email: email } });
+    return await this.usersRepository.findOne({ where: { email } });
   }
 
   async createUser(userData: CreateUserDto) {
+    //create and save new user
     const newUser = await this.usersRepository.create(userData);
     const savedUser = await this.usersRepository.save(newUser);
-    return savedUser;
+
+    const { password, ...userWithoutPassword } = savedUser;
+
+    return userWithoutPassword;
   }
 
   async updateUser(id: string, userData: any) {
@@ -50,7 +56,8 @@ export class UsersRepository {
 
     const updatedUser = this.usersRepository.merge(foundUser, userData);
     await this.usersRepository.save(updatedUser);
-    return { message: 'User Update Successfully', updatedUser };
+    const { password, ...userWithoutPassword } = updatedUser;
+    return { message: 'User Update Successfully', userWithoutPassword };
   }
 
   async deleteUser(id: string) {
@@ -60,7 +67,7 @@ export class UsersRepository {
     if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
 
     await this.usersRepository.remove(foundUser);
-    return { id: id, message: 'User Delete Successfully!' };
+    return { message: 'User Delete Successfully!' };
   }
 }
 

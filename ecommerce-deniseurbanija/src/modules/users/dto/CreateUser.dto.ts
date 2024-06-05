@@ -49,10 +49,16 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
-  @MaxLength(15)
+  @MaxLength(20)
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/)
   password: string;
 
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(8)
+  @MaxLength(20)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/)
+  passwordConfirm: string;
   /**
    * -Must be a string with a minimum of 3 characters and a maximum of 80
    *
