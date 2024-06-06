@@ -31,8 +31,7 @@ export class CategoriesRepository {
         .execute();
     });
     return {
-      message:
-        'The values of category names are unique and already exist in the categories table 👏🏼',
+      message: 'Categories seeded succesfully',
     };
   }
 }

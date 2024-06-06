@@ -14,13 +14,19 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { Roles } from 'src/decorator/roles.decorator';
 import { Role } from 'src/enum/role.enum';
 import { RolesGuard } from '../../guards/roles.guard';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller(`users`)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   async getUsers(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 5,
@@ -29,20 +35,15 @@ export class UsersController {
     return await this.usersService.getUsers(page, limit);
   }
 
-  @Get('admin')
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
-  admin() {
-    return 'ruta protegida';
-  }
-
   @Get(':id')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   async getUserById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.usersService.getUserById(id);
   }
 
   @Put(':id')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   async updateUser(
     @Param('id', ParseUUIDPipe) id: string,
@@ -52,6 +53,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return await this.usersService.deleteUser(id);

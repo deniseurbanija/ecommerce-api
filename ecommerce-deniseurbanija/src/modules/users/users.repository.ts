@@ -20,7 +20,7 @@ export class UsersRepository {
     });
 
     return users.map(
-      ({ password, ...usersWithoutPassword }) => usersWithoutPassword,
+      ({ password, isAdmin, ...usersWithoutPassword }) => usersWithoutPassword,
     );
   }
 
@@ -29,7 +29,7 @@ export class UsersRepository {
 
     if (!foundUser) throw new NotFoundException(`User with id ${id} not found`);
 
-    const { password, ...userWithoutPassword } = foundUser;
+    const { password, isAdmin, ...userWithoutPassword } = foundUser;
 
     return userWithoutPassword;
   }
@@ -43,7 +43,7 @@ export class UsersRepository {
     const newUser = await this.usersRepository.create(userData);
     const savedUser = await this.usersRepository.save(newUser);
 
-    const { password, ...userWithoutPassword } = savedUser;
+    const { password, isAdmin, ...userWithoutPassword } = savedUser;
 
     return userWithoutPassword;
   }

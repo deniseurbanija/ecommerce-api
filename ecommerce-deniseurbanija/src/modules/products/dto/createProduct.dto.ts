@@ -10,9 +10,7 @@ import {
 export class CreateProductDto {
   /**
    * -Must be unique
-   *
    * -Must be 50 character maximum
-   *
    * -It cant be empty
    *
    * @example "Nokia 1100"
@@ -27,7 +25,6 @@ export class CreateProductDto {
 
   /**
    * -Must be a string with a minimum of 10 characters and a maximum of 80
-   *
    * -It cant be empty
    *
    *@example "The best phone ever exist in the world!"
@@ -41,9 +38,7 @@ export class CreateProductDto {
 
   /**
    * -It cant be empty
-   *
    * -Must be a number
-   *
    * -Can be a float number
    *
    * @example 399.99
@@ -55,9 +50,7 @@ export class CreateProductDto {
 
   /**
    * -It cant be empty
-   *
    * -Must be a integer
-   *
    * -Cannot be a float number
    *
    * @example 10
@@ -69,9 +62,7 @@ export class CreateProductDto {
   /**
    *
    * -This property must be empty
-   *
    * -This value is given by default
-   *
    * -It will then be modified by the cloundinary service
    *
    * @example "default: 'https://www.netambulo.com/storage/2011/12/404-not-found-gatito.jpg'"

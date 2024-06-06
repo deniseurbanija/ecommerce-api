@@ -93,11 +93,10 @@ export class AuthService {
       throw new BadRequestException('Password could not be hashed');
 
     //create new user with the hashed password
-    const newUser: Omit<Users, 'password'> =
-      await this.usersRepository.createUser({
-        ...userData,
-        password: hashedPassword,
-      });
+    const newUser = await this.usersRepository.createUser({
+      ...userData,
+      password: hashedPassword,
+    });
 
     return newUser;
   }

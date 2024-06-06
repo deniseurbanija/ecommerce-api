@@ -45,8 +45,7 @@ export class ProductsRepository {
     });
 
     return {
-      message:
-        'The values of products names are unique and already exist in the products table',
+      message: 'Products seeded succesfully',
     };
   }
 

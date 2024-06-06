@@ -1,3 +1,4 @@
+import { ApiHideProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
@@ -7,15 +8,19 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Orders } from 'src/db/entities/Orders.entity';
 
 export class CreateUserDto {
+  @ApiHideProperty()
+  id: string;
+  @ApiHideProperty()
+  orders: Orders[];
   /**
    *
    * -Must be a string with a minimum of 3 characters and a maximum of 80
-   *
    * -It can be just a first name or you can also include your last name.
    *
-   *@example "Pepe"
+   *@example "Denise"
    */
   @IsString()
   @IsNotEmpty()
@@ -25,10 +30,9 @@ export class CreateUserDto {
 
   /**
    * -Must be a valid email address
-   *
    * -The email is unique. An address for a registered user
    *
-   *@example "pepe@gmail.com"
+   *@example "denise@gmail.com"
    */
 
   @IsEmail()
@@ -37,14 +41,11 @@ export class CreateUserDto {
 
   /**
    * -Must contains one of these special characters !@#$%^&_*
-   *
    * -Must be a string with a minimum of 8 characters and a maximum of 15
-   *
    * -Consider using a strong password
-   *
    * -Remember to properly save your password
    *
-   *@example "*Pass_sT0n5"
+   *@example "Asd_*123"
    */
   @IsNotEmpty()
   @IsString()
@@ -53,6 +54,14 @@ export class CreateUserDto {
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/)
   password: string;
 
+  /**
+   * -Must contains one of these special characters !@#$%^&_*
+   * -Must be a string with a minimum of 8 characters and a maximum of 15
+   * -Consider using a strong password
+   * -Remember to properly save your password
+   *
+   *@example "Asd_*123"
+   */
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
@@ -61,7 +70,6 @@ export class CreateUserDto {
   passwordConfirm: string;
   /**
    * -Must be a string with a minimum of 3 characters and a maximum of 80
-   *
    * -Must be a valid address location
    *
    *@example "adrres 01"
@@ -93,7 +101,6 @@ export class CreateUserDto {
 
   /**
    * -Must be a string with a minimum of 4 characters and a maximum of 20
-   *
    *@example "Buenos Aires"
    */
   @IsString()

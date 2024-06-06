@@ -13,7 +13,12 @@ import {
 import { ProductsService } from './products.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CreateProductDto } from './dto/createProduct.dto';
+import { Roles } from 'src/decorator/roles.decorator';
+import { Role } from 'src/enum/role.enum';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller(`products`)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -21,7 +26,10 @@ export class ProductsController {
   async seedProducts() {
     return await this.productsService.seedProducts();
   }
+
   @Get()
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   getProducts(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 5,
@@ -30,7 +38,7 @@ export class ProductsController {
     return this.productsService.getProducts(page, limit);
   }
 
-  @Get()
+  @Get(':id')
   getProductById(@Param('id', ParseUUIDPipe) id: number) {
     return this.productsService.getProductById(id);
   }
@@ -41,7 +49,9 @@ export class ProductsController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
   updateProduct(
     @Param('id', ParseUUIDPipe) id: number,
     @Body() productChange: string,
