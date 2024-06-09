@@ -7,6 +7,7 @@ import {
   Matches,
   MaxLength,
   MinLength,
+  IsEmpty,
 } from 'class-validator';
 import { Orders } from 'src/db/entities/Orders.entity';
 
@@ -72,7 +73,7 @@ export class CreateUserDto {
    * -Must be a string with a minimum of 3 characters and a maximum of 80
    * -Must be a valid address location
    *
-   *@example "adrres 01"
+   *@example "addres 01"
    */
   @IsNotEmpty()
   @IsString()
@@ -92,7 +93,7 @@ export class CreateUserDto {
   /**
    * -Must be a string with a minimum of 4 characters and a maximum of 20
    *
-   *@example "Perú"
+   *@example "Argentina"
    */
   @IsString()
   @MinLength(4)
@@ -107,4 +108,7 @@ export class CreateUserDto {
   @MinLength(4)
   @MaxLength(20)
   city: string;
+
+  @IsEmpty()
+  idAdmin: boolean;
 }

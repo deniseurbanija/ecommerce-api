@@ -15,7 +15,7 @@ const config = {
   migrations: ['dist/migrations/*{.js,.ts}'],
   autoLoadEntities: true,
   logging: false,
-  dropSchema: true,
+  dropSchema: false,
   synchronize: true,
 };
 
