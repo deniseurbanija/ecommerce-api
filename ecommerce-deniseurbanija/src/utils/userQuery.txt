@@ -1,0 +1,3 @@
+UPDATE users
+SET "isAdmin" = TRUE
+WHERE id = '4f383db5-b189-4be4-81e7-69e46ad45c71';
