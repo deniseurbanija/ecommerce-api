@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/db/entities/Users.entity';
-import { IUser } from 'src/interfaces/IUser';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/CreateUser.dto';
-import { UpdateUserDto } from './dto/UpdateUserDto';
+import { UpdateUserDto } from './dto/UpdateUser.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -18,6 +17,7 @@ export class UsersRepository {
     const users = await this.usersRepository.find({
       take: limit,
       skip: skip,
+      relations: { orders: true },
     });
 
     return users.map(

@@ -3,23 +3,20 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
   MinLength,
   IsEmpty,
 } from 'class-validator';
-import { Orders } from 'src/db/entities/Orders.entity';
 
-export class CreateUserDto {
+export class UpdateUserDto {
   @ApiHideProperty()
   id: string;
 
-  @ApiHideProperty()
-  orders: Orders[];
-
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MinLength(3)
   @MaxLength(80)
   @ApiProperty({
@@ -29,8 +26,8 @@ export class CreateUserDto {
   })
   name: string;
 
+  @IsOptional()
   @IsEmail()
-  @IsNotEmpty()
   @ApiProperty({
     description:
       'Must be a valid email address. The email is unique for a registered user.',
@@ -38,7 +35,7 @@ export class CreateUserDto {
   })
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(8)
   @MaxLength(20)
@@ -50,7 +47,7 @@ export class CreateUserDto {
   })
   password: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(8)
   @MaxLength(20)
@@ -62,7 +59,7 @@ export class CreateUserDto {
   })
   passwordConfirm: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(6)
   @MaxLength(50)
@@ -73,14 +70,15 @@ export class CreateUserDto {
   })
   address: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @ApiProperty({
     description: 'Consider using a valid phone number.',
-    example: '1132880924',
+    example: 1132880924,
   })
   phone: number;
 
+  @IsOptional()
   @IsString()
   @MinLength(4)
   @MaxLength(20)
@@ -91,6 +89,7 @@ export class CreateUserDto {
   })
   country: string;
 
+  @IsOptional()
   @IsString()
   @MinLength(4)
   @MaxLength(20)

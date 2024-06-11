@@ -6,68 +6,55 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProductDto {
-  /**
-   * -Must be unique
-   * -Must be 50 character maximum
-   * -It cant be empty
-   *
-   * @example "Nokia 1100"
-   *
-   */
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
   @MaxLength(50)
-  @IsString()
+  @ApiProperty({
+    description:
+      "Must be unique. Must be 50 characters maximum. It can't be empty.",
+    example: 'Nokia 1100',
+  })
   name: string;
 
-  /**
-   * -Must be a string with a minimum of 10 characters and a maximum of 80
-   * -It cant be empty
-   *
-   *@example "The best phone ever exist in the world!"
-   *
-   */
   @IsString()
+  @IsNotEmpty()
   @MinLength(10)
   @MaxLength(80)
-  @IsString()
+  @ApiProperty({
+    description:
+      "Must be a string with a minimum of 10 characters and a maximum of 80. It can't be empty.",
+    example: 'The best phone ever exists in the world!',
+  })
   description: string;
 
-  /**
-   * -It cant be empty
-   * -Must be a number
-   * -Can be a float number
-   *
-   * @example 399.99
-   *
-   */
   @IsNotEmpty()
   @IsNumber()
+  @ApiProperty({
+    description: "It can't be empty. Must be a number. Can be a float number.",
+    example: 399.99,
+  })
   price: number;
 
-  /**
-   * -It cant be empty
-   * -Must be a integer
-   * -Cannot be a float number
-   *
-   * @example 10
-   */
   @IsNotEmpty()
   @IsNumber()
+  @ApiProperty({
+    description:
+      "It can't be empty. Must be an integer. Cannot be a float number.",
+    example: 10,
+  })
   stock: number;
 
-  /**
-   *
-   * -This property must be empty
-   * -This value is given by default
-   * -It will then be modified by the cloundinary service
-   *
-   * @example "default: 'https://www.netambulo.com/storage/2011/12/404-not-found-gatito.jpg'"
-   */
   @IsOptional()
   @IsString()
+  @ApiProperty({
+    description:
+      'This property must be empty. This value is given by default and will be modified by the cloudinary service.',
+    example:
+      'https://www.netambulo.com/storage/2011/12/404-not-found-gatito.jpg',
+  })
   imgUrl: string;
 }

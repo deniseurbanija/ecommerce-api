@@ -20,6 +20,7 @@ export class CategoriesRepository {
     return categories;
   }
 
+  //!!!!!!!!!!!
   async seedCategories() {
     data?.map(async (element) => {
       await this.categoriesRepository

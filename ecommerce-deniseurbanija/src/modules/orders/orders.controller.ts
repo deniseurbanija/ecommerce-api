@@ -3,6 +3,7 @@ import { OrdersService } from './orders.service';
 import { IProduct } from 'src/interfaces/IProduct';
 import { AuthGuard } from '../../guards/auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CreateOrderDto } from './dto/CreateOrder.dto';
 
 @ApiTags('orders')
 @Controller('orders')
@@ -12,8 +13,9 @@ export class OrdersController {
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
-  async addOrder(@Body() userId: string, product: IProduct[]) {
-    return await this.ordersService.addOrder(userId, product);
+  async addOrder(@Body() orderData: CreateOrderDto) {
+    const { userId, products } = orderData;
+    return await this.ordersService.addOrder(userId, products);
   }
 
   @Get(':id')

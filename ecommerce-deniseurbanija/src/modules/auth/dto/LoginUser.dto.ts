@@ -1,24 +1,34 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  MinLength,
+  MaxLength,
+  Matches,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginUserDto {
-  /**
-   * -Must contains one of these special characters !@#$%^&_*
-   * -Must be a string with a minimum of 8 characters and a maximum of 15
-   *
-   *@example "Asd_*123"
-   */
   @IsNotEmpty()
   @IsString()
+  @MinLength(8)
+  @MaxLength(15)
+  @Matches(/.*[!@#$%^&_].*/, {
+    message: 'Password must contain at least one special character: !@#$%^&_',
+  })
+  @ApiProperty({
+    description:
+      'Password must contain one of these special characters !@#$%^&_*. It must be a string with a minimum of 8 characters and a maximum of 15.',
+    example: 'Asd_*123',
+  })
   password: string;
 
-  /**
-   * -Must be a valid email address
-   * -Must be the email with which you registered
-   *
-   * @example denise@gmail.com
-   */
   @IsNotEmpty()
   @IsEmail()
-  @IsString()
+  @ApiProperty({
+    description:
+      'Must be a valid email address and the email with which you registered.',
+    example: 'denise@gmail.com',
+  })
   email: string;
 }
