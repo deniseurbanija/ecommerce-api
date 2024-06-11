@@ -18,8 +18,12 @@ export class CreateOrderDto {
     description:
       'Array of product IDs. Each ID must be a valid UUID format. Should any of these IDs not have a valid UUID format, you will not be able to proceed with your order.',
     example: [
-      '6a35af70-4252-46bd-93bd-c0bac5937026',
-      '6876fb8b-d171-43bb-bc7d-ee05e8191f26',
+      {
+        id: '6a35af70-4252-46bd-93bd-c0bac5937026',
+      },
+      {
+        id: '6876fb8b-d171-43bb-bc7d-ee05e8191f26',
+      },
     ],
   })
   products: IProduct[];

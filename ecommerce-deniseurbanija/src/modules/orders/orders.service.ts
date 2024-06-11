@@ -10,6 +10,10 @@ export class OrdersService {
     return await this.ordersRepository.addOrder(userId, products);
   }
 
+  async getOrders() {
+    return await this.ordersRepository.getOrders();
+  }
+
   async getOrder(id) {
     return await this.ordersRepository.getOrder(id);
   }

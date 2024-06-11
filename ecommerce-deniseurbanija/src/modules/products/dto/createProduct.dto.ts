@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsString,
   MaxLength,
+  Min,
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -19,6 +20,10 @@ export class CreateProductDto {
     example: 'Nokia 1100',
   })
   name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  subtitle: string;
 
   @IsString()
   @IsNotEmpty()
@@ -41,6 +46,7 @@ export class CreateProductDto {
 
   @IsNotEmpty()
   @IsNumber()
+  @Min(1)
   @ApiProperty({
     description:
       "It can't be empty. Must be an integer. Cannot be a float number.",

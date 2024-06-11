@@ -17,6 +17,9 @@ export class Products {
   @Column({ length: 50, unique: true })
   name: string;
 
+  @Column('text', { nullable: true })
+  subtitle: string;
+
   @Column('text')
   description: string;
 
