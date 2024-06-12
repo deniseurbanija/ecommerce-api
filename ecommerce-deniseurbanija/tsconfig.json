@@ -19,6 +19,6 @@
     "noFallthroughCasesInSwitch": false,
     "noUnusedLocals": false,
     "resolveJsonModule": true,
-    "types": ["express", "Multer"]
+    "types": ["node", "express", "Multer"]
   }
 }
